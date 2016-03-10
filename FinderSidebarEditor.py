@@ -86,9 +86,11 @@ class FinderSidebar(object):
     def getItemName(self, n):
         return self.tuples[n][0]
 
-sidebar = FinderSidebar()
 
-sidebar.remove("All My Files")
-sidebar.remove("iCloud")
-sidebar.add("/Library")
-sidebar.move("Library", "Applications")
+# Example usage
+
+# sidebar = FinderSidebar()
+# sidebar.remove("All My Files")
+# sidebar.remove("iCloud")
+# sidebar.add("/Library")
+# sidebar.move("Library", "Applications")
