@@ -7,11 +7,11 @@ Example Usage:
 
 import FinderSidebarEditor
 
-sidebar = FinderSidebar() # Create a sidebar instance to act on.
+sidebar = FinderSidebar()               # Create a sidebar instance to act on.
 
-sidebar.remove("All My Files") # Remove 'All My Files' favorite from sidebar
-sidebar.remove("iCloud") # Remove 'iCloud' favorite from sidebar
-sidebar.add("/Library") # Add '/Library' favorite to sidebar
+sidebar.remove("All My Files")          # Remove 'All My Files' favorite from sidebar
+sidebar.remove("iCloud")                # Remove 'iCloud' favorite from sidebar
+sidebar.add("/Library")                 # Add '/Library' favorite to sidebar
 sidebar.move("Library", "Applications") # Move newly added 'Library' favorite to just after 'Applications'
 
 ```
