@@ -12,6 +12,6 @@ sidebar = FinderSidebar()               # Create a Finder sidebar instance to ac
 sidebar.remove("All My Files")          # Remove 'All My Files' favorite from sidebar
 sidebar.remove("iCloud")                # Remove 'iCloud' favorite from sidebar
 sidebar.add("/Library")                 # Add '/Library' favorite to sidebar
-sidebar.move("Library", "Applications") # Move newly added 'Library' favorite to just after 'Applications'
+sidebar.move("Library", "Applications") # Move 'Library' favorite to slot just below 'Applications'
 
 ```
