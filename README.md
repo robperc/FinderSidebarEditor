@@ -1,5 +1,5 @@
 # FinderSidebarEditor
-Python module for easily adding removing, and moving favorites from the Finder sidebar in the context of the logged in user.
+Python module for easily adding, removing, and moving favorites on the Finder sidebar in the context of the logged in user.
 
 Example Usage:
 ```
