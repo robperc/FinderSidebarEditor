@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import Cocoa
 import CoreFoundation
 from LaunchServices import kLSSharedFileListFavoriteItems
