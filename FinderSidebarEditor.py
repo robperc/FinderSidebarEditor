@@ -25,10 +25,10 @@ else:
 class FinderSidebar(object):
 
     def __init__(self):
-        self.tuples   = None
-        self.names    = None
-        self.items    = None
-        self.snapshot = None
+        self.tuples   = list()
+        self.names    = list()
+        self.items    = list()
+        self.snapshot = list()
         self.update()
 
     def update(self):
