@@ -32,10 +32,10 @@ class FinderSidebar(object):
         self.update()
 
     def update(self):
-        self.tuples   = list()
-        self.names    = list()
-        self.items    = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
-        self.snapshot = LSSharedFileListCopySnapshot(self.items, None)
+        self.tuples[:] = []
+        self.names[:]  = []
+        self.items     = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
+        self.snapshot  = LSSharedFileListCopySnapshot(self.items, None)
         for item in self.snapshot[0]:
             name = LSSharedFileListItemCopyDisplayName(item)
             path = ""
