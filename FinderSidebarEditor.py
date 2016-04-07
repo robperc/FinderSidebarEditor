@@ -109,6 +109,10 @@ class FinderSidebar(object):
         self.update()
 
     def add(self, to_add, uri="file://localhost"):
+        if uri.startswith("afp"):
+            path = "%s%s" % (uri, to_add)
+            to_add = mount_share(path)
+            uri = "file://localhost"
         path = "%s%s" % (uri, to_add)
         url = Cocoa.NSString.alloc().initWithString_(path)
         item = Cocoa.NSURL.alloc().init()
