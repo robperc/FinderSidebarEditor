@@ -107,10 +107,7 @@ class FinderSidebar(object):
             path = "%s%s" % (uri, to_add)
             to_add = mount_share(path)
             uri = "file://localhost"
-        path = "%s%s" % (uri, to_add)
-        url  = Cocoa.NSString.alloc().initWithString_(path)
-        item = Cocoa.NSURL.alloc().init()
-        item = Cocoa.NSURL.URLWithString_(url.stringByAddingPercentEscapesUsingEncoding_(Cocoa.NSASCIIStringEncoding))
+        item = Cocoa.NSURL.alloc().initFileURLWithPath_(to_add)
         LSSharedFileListInsertItemURL(self.sflRef, kLSSharedFileListItemBeforeFirst, None, None, item, None, None)
         self.synchronize()
         self.update()
