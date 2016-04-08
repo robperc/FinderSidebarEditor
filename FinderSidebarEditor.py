@@ -57,14 +57,14 @@ objc.loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@
 class FinderSidebar(object):
 
     def __init__(self):
-        self.sflRef     = list()
+        self.sflRef    = list()
         self.snapshot  = list()
         self.favorites = dict()
         self.update()
 
     def update(self):
         self.favorites = dict()
-        self.sflRef     = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
+        self.sflRef    = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
         self.snapshot  = LSSharedFileListCopySnapshot(self.sflRef, None)
         for item in self.snapshot[0]:
             name = LSSharedFileListItemCopyDisplayName(item)
@@ -108,7 +108,7 @@ class FinderSidebar(object):
             to_add = mount_share(path)
             uri = "file://localhost"
         path = "%s%s" % (uri, to_add)
-        url = Cocoa.NSString.alloc().initWithString_(path)
+        url  = Cocoa.NSString.alloc().initWithString_(path)
         item = Cocoa.NSURL.alloc().init()
         item = Cocoa.NSURL.URLWithString_(url.stringByAddingPercentEscapesUsingEncoding_(Cocoa.NSASCIIStringEncoding))
         LSSharedFileListInsertItemURL(self.sflRef, kLSSharedFileListItemBeforeFirst, None, None, item, None, None)
