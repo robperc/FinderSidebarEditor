@@ -3,8 +3,8 @@
 import objc
 import platform
 
-import Cocoa
 import CoreFoundation
+from Cocoa import NSURL
 from LaunchServices import kLSSharedFileListFavoriteItems
 from Foundation import CFURLCreateWithString, NSBundle
 
@@ -106,8 +106,7 @@ class FinderSidebar(object):
         if uri.startswith("afp") or uri.startswith("smb"):
             path = "%s%s" % (uri, to_add)
             to_add = mount_share(path)
-            uri = "file://localhost"
-        item = Cocoa.NSURL.alloc().initFileURLWithPath_(to_add)
+        item = NSURL.alloc().initFileURLWithPath_(to_add)
         LSSharedFileListInsertItemURL(self.sflRef, kLSSharedFileListItemBeforeFirst, None, None, item, None, None)
         self.synchronize()
         self.update()
