@@ -84,7 +84,7 @@ class FinderSidebar(object):
         CoreFoundation.CFPreferencesAppSynchronize("com.apple.sidebarlists")
 
     def move(self, to_mv, after):
-        if to_mv not in self.names or after not in self.names or to_mv == after:
+        if to_mv not in self.favorites.keys() or after not in self.favorites.keys() or to_mv == after:
         	return
 
         for item in self.snapshot[0]:
