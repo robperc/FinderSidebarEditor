@@ -57,16 +57,12 @@ objc.loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@
 class FinderSidebar(object):
 
     def __init__(self):
-        self.tuples    = list()
-        self.names     = list()
         self.items     = list()
         self.snapshot  = list()
         self.favorites = dict()
         self.update()
 
     def update(self):
-        self.tuples[:] = []
-        self.names[:]  = []
         self.favorites = dict()
         self.items     = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
         self.snapshot  = LSSharedFileListCopySnapshot(self.items, None)
@@ -75,8 +71,6 @@ class FinderSidebar(object):
             path = ""
             if name not in ("AirDrop", "All My Files", "iCloud"):
                 path = LSSharedFileListItemResolve(item,0,None,None)[1]
-            self.names.append(name.upper())
-            self.tuples.append((name, path))
             self.favorites[name] = path
 
     def synchronize(self):
