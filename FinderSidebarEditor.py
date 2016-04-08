@@ -24,7 +24,7 @@ else:
 	from LaunchServices import kLSSharedFileListItemBeforeFirst, LSSharedFileListCreate, LSSharedFileListCopySnapshot, LSSharedFileListItemCopyDisplayName, LSSharedFileListItemResolve, LSSharedFileListItemMove, LSSharedFileListItemRemove, LSSharedFileListInsertItemURL
 
 # Shoutout to Mike Lynn for the mount_share function below, allowing for the scripting of mounting network shares.
-# See his blog post for more details: http://michaellynn.github.io/2015/08/08/learn-you-a-better-pyobjc-bridgesupport-signature/ for more details.
+# See his blog post for more details: http://michaellynn.github.io/2015/08/08/learn-you-a-better-pyobjc-bridgesupport-signature/
 class attrdict(dict): 
     __getattr__ = dict.__getitem__
     __setattr__ = dict.__setitem__
