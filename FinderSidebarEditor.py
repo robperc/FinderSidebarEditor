@@ -81,14 +81,11 @@ class FinderSidebar(object):
         CoreFoundation.CFPreferencesAppSynchronize("com.apple.sidebarlists")
 
     def move(self, to_mv, after):
-        to_mv = to_mv.upper()
-        after = after.upper()
-
         if to_mv == after:
         	return
 
         for item in self.snapshot[0]:
-            name = LSSharedFileListItemCopyDisplayName(item).upper()
+            name = LSSharedFileListItemCopyDisplayName(item)
                 
             if name == after:
                 after = item
