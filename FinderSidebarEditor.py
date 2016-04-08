@@ -109,7 +109,7 @@ class FinderSidebar(object):
         self.update()
 
     def add(self, to_add, uri="file://localhost"):
-        if uri.startswith("afp"):
+        if uri.startswith("afp") or uri.startswith("smb"):
             path = "%s%s" % (uri, to_add)
             to_add = mount_share(path)
             uri = "file://localhost"
