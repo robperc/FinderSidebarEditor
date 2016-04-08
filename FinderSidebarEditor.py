@@ -92,7 +92,7 @@ class FinderSidebar(object):
                 
             if name == after:
                 after = item
-            if name == to_mv:
+            elif name == to_mv:
                 to_mv = item
 
         LSSharedFileListItemMove(self.items, to_mv, after)
