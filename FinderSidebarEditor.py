@@ -57,15 +57,15 @@ objc.loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@
 class FinderSidebar(object):
 
     def __init__(self):
-        self.items     = list()
+        self.sflRef     = list()
         self.snapshot  = list()
         self.favorites = dict()
         self.update()
 
     def update(self):
         self.favorites = dict()
-        self.items     = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
-        self.snapshot  = LSSharedFileListCopySnapshot(self.items, None)
+        self.sflRef     = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
+        self.snapshot  = LSSharedFileListCopySnapshot(self.sflRef, None)
         for item in self.snapshot[0]:
             name = LSSharedFileListItemCopyDisplayName(item)
             path = ""
@@ -89,7 +89,7 @@ class FinderSidebar(object):
             elif name == to_mv:
                 to_mv = item
 
-        LSSharedFileListItemMove(self.items, to_mv, after)
+        LSSharedFileListItemMove(self.sflRef, to_mv, after)
         self.synchronize()
         self.update()
 
@@ -97,7 +97,7 @@ class FinderSidebar(object):
         for item in self.snapshot[0]:
             name = LSSharedFileListItemCopyDisplayName(item)
             if to_rm.upper() == name.upper():
-                LSSharedFileListItemRemove(self.items, item)
+                LSSharedFileListItemRemove(self.sflRef, item)
 
         self.synchronize()
         self.update()
@@ -111,7 +111,7 @@ class FinderSidebar(object):
         url = Cocoa.NSString.alloc().initWithString_(path)
         item = Cocoa.NSURL.alloc().init()
         item = Cocoa.NSURL.URLWithString_(url.stringByAddingPercentEscapesUsingEncoding_(Cocoa.NSASCIIStringEncoding))
-        LSSharedFileListInsertItemURL(self.items, kLSSharedFileListItemBeforeFirst, None, None, item, None, None)
+        LSSharedFileListInsertItemURL(self.sflRef, kLSSharedFileListItemBeforeFirst, None, None, item, None, None)
         self.synchronize()
         self.update()
 
