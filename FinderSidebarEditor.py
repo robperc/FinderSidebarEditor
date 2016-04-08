@@ -121,5 +121,3 @@ class FinderSidebar(object):
         self.synchronize()
         self.update()
 
-    def getItemName(self, n):
-        return self.tuples[n][0]
