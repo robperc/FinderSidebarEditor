@@ -74,7 +74,6 @@ class FinderSidebar(object):
             self.favorites[name] = path
 
     def synchronize(self):
-        CoreFoundation.CFPreferencesSynchronize(CoreFoundation.kCFPreferencesAnyApplication,CoreFoundation.kCFPreferencesCurrentUser,CoreFoundation.kCFPreferencesCurrentHost)
         CoreFoundation.CFPreferencesAppSynchronize("com.apple.sidebarlists")
 
     def move(self, to_mv, after):
