@@ -58,7 +58,7 @@ class FinderSidebar(object):
 
     def __init__(self):
         self.sflRef    = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
-        self.snapshot  = list()
+        self.snapshot  = LSSharedFileListCopySnapshot(self.sflRef, None)
         self.favorites = dict()
         self.update()
 
