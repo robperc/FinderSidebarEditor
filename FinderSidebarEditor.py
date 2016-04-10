@@ -57,14 +57,13 @@ objc.loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@
 class FinderSidebar(object):
 
     def __init__(self):
-        self.sflRef    = list()
+        self.sflRef    = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
         self.snapshot  = list()
         self.favorites = dict()
         self.update()
 
     def update(self):
         self.favorites = dict()
-        self.sflRef    = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
         self.snapshot  = LSSharedFileListCopySnapshot(self.sflRef, None)
         for item in self.snapshot[0]:
             name = LSSharedFileListItemCopyDisplayName(item)
@@ -97,7 +96,6 @@ class FinderSidebar(object):
             name = LSSharedFileListItemCopyDisplayName(item)
             if to_rm.upper() == name.upper():
                 LSSharedFileListItemRemove(self.sflRef, item)
-
         self.synchronize()
         self.update()
 
