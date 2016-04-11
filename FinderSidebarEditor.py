@@ -3,10 +3,10 @@
 import objc
 import platform
 
-import CoreFoundation
 from Cocoa import NSURL
+from CoreFoundation import CFPreferencesAppSynchronize, CFURLCreateWithString, kCFAllocatorDefault
 from LaunchServices import kLSSharedFileListFavoriteItems
-from Foundation import CFURLCreateWithString, NSBundle
+from Foundation import NSBundle
 
 os_vers = int(platform.mac_ver()[0].split('.')[1])
 if os_vers > 10:
@@ -36,7 +36,7 @@ NetFS_bundle = objc.initFrameworkWrapper('NetFS', frameworkIdentifier=None, fram
 
 def mount_share(share_path):
 	# Mounts a share at /Volumes, returns the mount point or raises an error
-	sh_url = CoreFoundation.CFURLCreateWithString(None, share_path, None)
+	sh_url = CFURLCreateWithString(None, share_path, None)
 	# Set UI to reduced interaction
 	open_options  = {NetFS.kNAUIOptionKey: NetFS.kNAUIOptionNoUI}
 	# Allow mounting sub-directories of root shares
@@ -57,7 +57,7 @@ objc.loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@
 class FinderSidebar(object):
 
 	def __init__(self):
-		self.sflRef    = LSSharedFileListCreate(CoreFoundation.kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
+		self.sflRef    = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
 		self.snapshot  = LSSharedFileListCopySnapshot(self.sflRef, None)
 		self.favorites = dict()
 		self.update()
@@ -73,7 +73,7 @@ class FinderSidebar(object):
 			self.favorites[name] = path
 
 	def synchronize(self):
-		CoreFoundation.CFPreferencesAppSynchronize("com.apple.sidebarlists")
+		CFPreferencesAppSynchronize("com.apple.sidebarlists")
 
 	def move(self, to_mv, after):
 		if to_mv not in self.favorites.keys() or after not in self.favorites.keys() or to_mv == after:
