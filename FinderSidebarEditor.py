@@ -100,6 +100,11 @@ class FinderSidebar(object):
 		self.synchronize()
 		self.update()
 
+	def removeAll(self):
+		LSSharedFileListRemoveAllItems(self.sflRef)
+		self.synchronize()
+		self.update()
+
 	def add(self, to_add, uri="file://localhost"):
 		if uri.startswith("afp") or uri.startswith("smb"):
 			path = "%s%s" % (uri, to_add)
