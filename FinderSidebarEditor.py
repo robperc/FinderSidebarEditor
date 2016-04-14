@@ -1,14 +1,14 @@
 #!/usr/bin/python
 
 import objc
-import platform
+from platform import mac_ver
 
 from Cocoa import NSURL
 from CoreFoundation import CFPreferencesAppSynchronize, CFURLCreateWithString, kCFAllocatorDefault
 from LaunchServices import kLSSharedFileListFavoriteItems
 from Foundation import NSBundle
 
-os_vers = int(platform.mac_ver()[0].split('.')[1])
+os_vers = int(mac_ver()[0].split('.')[1])
 if os_vers > 10:
 	SFL_bundle = NSBundle.bundleWithIdentifier_('com.apple.coreservices.SharedFileList')
 	functions  = [('LSSharedFileListCreate',              '^{OpaqueLSSharedFileListRef=}^{__CFAllocator=}^{__CFString=}@'),
