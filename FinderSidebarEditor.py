@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import objc
+from objc import loadBundleFunctions, initFrameworkWrapper, pathForFramework
 from platform import mac_ver
 
 from Cocoa import NSURL
@@ -20,7 +20,7 @@ if os_vers > 10:
 				('LSSharedFileListRemoveAllItems',      'i^{OpaqueLSSharedFileListRef=}'),
 				('LSSharedFileListInsertItemURL',       '^{OpaqueLSSharedFileListItemRef=}^{OpaqueLSSharedFileListRef=}^{OpaqueLSSharedFileListItemRef=}^{__CFString=}^{OpaqueIconRef=}^{__CFURL=}^{__CFDictionary=}^{__CFArray=}'),
 				('kLSSharedFileListItemBeforeFirst',    '^{OpaqueLSSharedFileListItemRef=}'),]
-	objc.loadBundleFunctions(SFL_bundle, globals(), functions)
+	loadBundleFunctions(SFL_bundle, globals(), functions)
 else:
 	from LaunchServices import kLSSharedFileListItemBeforeFirst, LSSharedFileListCreate, LSSharedFileListCopySnapshot, LSSharedFileListItemCopyDisplayName, LSSharedFileListItemResolve, LSSharedFileListItemMove, LSSharedFileListItemRemove, LSSharedFileListRemoveAllItems, LSSharedFileListInsertItemURL
 
@@ -33,7 +33,7 @@ class attrdict(dict):
 NetFS = attrdict()
 # Can cheat and provide 'None' for the identifier, it'll just use frameworkPath instead
 # scan_classes=False means only add the contents of this Framework
-NetFS_bundle = objc.initFrameworkWrapper('NetFS', frameworkIdentifier=None, frameworkPath=objc.pathForFramework('NetFS.framework'), globals=NetFS, scan_classes=False)
+NetFS_bundle = initFrameworkWrapper('NetFS', frameworkIdentifier=None, frameworkPath=pathForFramework('NetFS.framework'), globals=NetFS, scan_classes=False)
 
 def mount_share(share_path):
 	# Mounts a share at /Volumes, returns the mount point or raises an error
@@ -53,7 +53,7 @@ def mount_share(share_path):
 # https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 # Fix NetFSMountURLSync signature
 del NetFS['NetFSMountURLSync']
-objc.loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@')])
+loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@')])
 
 class FinderSidebar(object):
 
