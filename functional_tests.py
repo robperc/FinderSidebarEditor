@@ -4,12 +4,12 @@ import unittest
 class TestFinderSidebar(unittest.TestCase):
 	def setUp(self):
 		self.finder = FinderSidebar()
-		self.pre_items = dict(self.finder.favorites)
+		self.pre_items = [str(uri).split("file://")[1] for uri in self.finder.favorites.values()]
 		self.finder.removeAll()
 
 	def tearDown(self):
 		self.finder.removeAll()
-		for name, uri in self.pre_items.iteritems():
+		for uri in self.pre_items:
 			self.finder.add(uri)
 
 if __name__ == '__main__':
