@@ -18,5 +18,11 @@ class TestFinderSidebar(unittest.TestCase):
 		self.finder.removeAll()
 		assert not self.finder.favorites
 
+	def test_add_then_remove(self):
+		self.finder.add("/usr")
+		assert 'usr' in self.finder.favorites.keys()
+		self.finder.remove("usr")
+		assert not self.finder.favorites
+
 if __name__ == '__main__':
     unittest.main()
