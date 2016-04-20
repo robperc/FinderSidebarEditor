@@ -24,5 +24,12 @@ class TestFinderSidebar(unittest.TestCase):
 		self.finder.remove("usr")
 		assert not self.finder.favorites
 
+	def test_add_then_move_items(self):
+		self.finder.removeAll()
+		self.finder.add("/usr")
+		self.finder.add("/tmp")
+		self.finder.move("usr", "tmp")
+		assert self.finder.getIndex("tmp") < self.finder.getIndex("usr")
+
 if __name__ == '__main__':
     unittest.main()
