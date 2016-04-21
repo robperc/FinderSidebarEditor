@@ -16,6 +16,8 @@ class TestFinderSidebar(unittest.TestCase):
 		self.finder.removeAll()
 		self.finder.add("/tmp")
 		assert self.finder.getIndex("tmp") == 0
+		self.finder.add("/usr")
+		assert self.finder.getIndex("usr") == 1
 		self.finder.removeAll()
 
 	def test_add_then_remove_all(self):
