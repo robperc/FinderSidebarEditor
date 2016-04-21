@@ -12,17 +12,25 @@ class TestFinderSidebar(unittest.TestCase):
 		for uri in self.pre_items:
 			self.finder.add(uri)
 
+	def test_get_index(self):
+		self.finder.removeAll()
+		self.finder.add("/tmp")
+		assert self.finder.getIndex("tmp") == 0
+		self.finder.removeAll()
+
 	def test_add_then_remove_all(self):
 		self.finder.add("/tmp")
 		assert 'tmp' in self.finder.favorites.keys()
 		self.finder.removeAll()
 		assert not self.finder.favorites
+		self.finder.removeAll()
 
 	def test_add_then_remove(self):
 		self.finder.add("/usr")
 		assert 'usr' in self.finder.favorites.keys()
 		self.finder.remove("usr")
 		assert not self.finder.favorites
+		self.finder.removeAll()
 
 	def test_add_then_move_items(self):
 		self.finder.removeAll()
@@ -30,6 +38,7 @@ class TestFinderSidebar(unittest.TestCase):
 		self.finder.add("/tmp")
 		self.finder.move("usr", "tmp")
 		assert self.finder.getIndex("tmp") < self.finder.getIndex("usr")
+		self.finder.removeAll()
 
 if __name__ == '__main__':
     unittest.main()
