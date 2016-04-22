@@ -15,9 +15,9 @@ class TestFinderSidebar(unittest.TestCase):
 	def test_get_index(self):
 		self.finder.removeAll()
 		self.finder.add("/tmp")
-		assert self.finder.getIndex("tmp") == 0
+		assert self.finder.getIndexFromName("tmp") == 0
 		self.finder.add("/usr")
-		assert self.finder.getIndex("usr") == 1
+		assert self.finder.getIndexFromName("usr") == 1
 		self.finder.removeAll()
 
 	def test_add_then_remove_all(self):
@@ -39,7 +39,7 @@ class TestFinderSidebar(unittest.TestCase):
 		self.finder.add("/usr")
 		self.finder.add("/tmp")
 		self.finder.move("usr", "tmp")
-		assert self.finder.getIndex("tmp") < self.finder.getIndex("usr")
+		assert self.finder.getIndexFromName("tmp") < self.finder.getIndexFromName("usr")
 		self.finder.removeAll()
 
 if __name__ == '__main__':
