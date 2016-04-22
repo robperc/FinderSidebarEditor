@@ -114,7 +114,7 @@ class FinderSidebar(object):
 		self.synchronize()
 		self.update()
 
-	def getIndex(self, name):
+	def getIndexFromName(self, name):
 		for index, item in enumerate(self.snapshot[0]):
 			found_name = LSSharedFileListItemCopyDisplayName(item)
 			if name == found_name:
