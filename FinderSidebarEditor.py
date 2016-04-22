@@ -120,3 +120,9 @@ class FinderSidebar(object):
 			if name == found_name:
 				return index
 
+	def getNameFromIndex(self, index):
+		if index > len(self.snapshot[0]):
+			index = -1
+		return LSSharedFileListItemCopyDisplayName(self.snapshot[0][index])
+
+
