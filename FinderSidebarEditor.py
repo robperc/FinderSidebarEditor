@@ -56,6 +56,15 @@ del NetFS['NetFSMountURLSync']
 loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@')])
 
 class FinderSidebar(object):
+	"""
+	Finder Sidebar instance containing favorites entries for logged in user.
+
+	Attributes:
+		sflRef    (): 
+		snapshot  (): 
+		favorites (dict):
+
+	"""
 
 	def __init__(self):
 		self.sflRef    = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
