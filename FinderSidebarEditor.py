@@ -57,12 +57,12 @@ loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@')])
 
 class FinderSidebar(object):
 	"""
-	Finder Sidebar instance containing favorites entries for logged in user.
+	Finder Sidebar instance for modifying favorites entries for logged in user.
 
 	Attributes:
-		sflRef    (): 
-		snapshot  (): 
-		favorites (dict):
+		sflRef    (LSSharedFileList): Reference to sfl object containing Finder favorites data.
+		snapshot             (tuple): Snapshot of Finder sfl object containing readable entries for each favorite.
+		favorites             (dict): Dictionary containing name: uri pairs for each favorite.
 
 	"""
 
