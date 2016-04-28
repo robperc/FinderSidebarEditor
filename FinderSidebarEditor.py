@@ -87,6 +87,10 @@ class FinderSidebar(object):
 			self.favorites[name] = path
 
 	def synchronize(self):
+		"""
+		Synchronizes CF prefs for sidebarlists identifier.
+
+		"""
 		CFPreferencesAppSynchronize("com.apple.sidebarlists")
 
 	def move(self, to_mv, after):
