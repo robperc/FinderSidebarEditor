@@ -73,6 +73,10 @@ class FinderSidebar(object):
 		self.update()
 
 	def update(self):
+		"""
+		Updates snapshot and favorites attributes.
+
+		"""
 		self.favorites = dict()
 		self.snapshot  = LSSharedFileListCopySnapshot(self.sflRef, None)
 		for item in self.snapshot[0]:
