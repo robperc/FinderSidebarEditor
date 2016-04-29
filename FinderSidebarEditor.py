@@ -94,6 +94,14 @@ class FinderSidebar(object):
 		CFPreferencesAppSynchronize("com.apple.sidebarlists")
 
 	def move(self, to_mv, after):
+		"""
+		Moves sidebar list item to position immediately other sidebar list item.
+
+		Args:
+			to_mv (str): Name of sidebar list item to move.
+			after (str): Name of sidebar list item to move "to_mv" after.
+
+		"""
 		if to_mv not in self.favorites.keys() or after not in self.favorites.keys() or to_mv == after:
 			return
 
