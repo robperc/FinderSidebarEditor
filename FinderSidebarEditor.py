@@ -118,6 +118,13 @@ class FinderSidebar(object):
 		self.update()
 
 	def remove(self, to_rm):
+		"""
+		Removes sidebar list item.
+
+		Args:
+			to_rm (str): Name of sidebar list item to remove.ß
+
+		"""
 		for item in self.snapshot[0]:
 			name = LSSharedFileListItemCopyDisplayName(item)
 			if to_rm.upper() == name.upper():
