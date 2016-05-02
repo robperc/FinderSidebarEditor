@@ -122,7 +122,7 @@ class FinderSidebar(object):
 		Removes sidebar list item.
 
 		Args:
-			to_rm (str): Name of sidebar list item to remove.ß
+			to_rm (str): Name of sidebar list item to remove.
 
 		"""
 		for item in self.snapshot[0]:
@@ -133,6 +133,10 @@ class FinderSidebar(object):
 		self.update()
 
 	def removeAll(self):
+		"""
+		Removes all sidebar list items.
+
+		"""
 		LSSharedFileListRemoveAllItems(self.sflRef)
 		self.synchronize()
 		self.update()
