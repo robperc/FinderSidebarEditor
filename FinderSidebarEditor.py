@@ -142,6 +142,16 @@ class FinderSidebar(object):
 		self.update()
 
 	def add(self, to_add, uri="file://localhost"):
+		"""
+		Append item to sidebar list items.
+
+		Args:
+			to_add (str): Path to item to append to sidebar list.
+
+		Keyword Args:
+			uri (str): URI of server where item resides if not on localhost.
+
+		"""
 		if uri.startswith("afp") or uri.startswith("smb"):
 			path = "%s%s" % (uri, to_add)
 			to_add = mount_share(path)
