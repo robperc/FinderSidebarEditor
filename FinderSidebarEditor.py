@@ -161,6 +161,16 @@ class FinderSidebar(object):
 		self.update()
 
 	def getIndexFromName(self, name):
+		"""
+		Gets index of sidebar list item identified by name.
+
+		Args:
+			name (str): Display name to identfy sidebar list item by.
+
+		Returns:
+			Index of sidebar list item identified by name
+
+		"""
 		for index, item in enumerate(self.snapshot[0]):
 			found_name = LSSharedFileListItemCopyDisplayName(item)
 			if name == found_name:
