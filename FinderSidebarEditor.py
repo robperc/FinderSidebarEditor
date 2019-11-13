@@ -8,8 +8,8 @@ from CoreFoundation import CFPreferencesAppSynchronize, CFURLCreateWithString, k
 from LaunchServices import kLSSharedFileListFavoriteItems
 from Foundation import NSBundle
 
-os_vers = int(mac_ver()[0].split('.')[1])
-if os_vers > 10:
+os_version = int(mac_ver()[0].split('.')[1])
+if os_version > 10:
 	SFL_bundle = NSBundle.bundleWithIdentifier_('com.apple.coreservices.SharedFileList')
 	functions = [('LSSharedFileListCreate',             b'^{OpaqueLSSharedFileListRef=}^{__CFAllocator=}^{__CFString=}@'),
 				('LSSharedFileListCopySnapshot',        b'^{__CFArray=}^{OpaqueLSSharedFileListRef=}o^I'),
@@ -24,31 +24,42 @@ if os_vers > 10:
 else:
 	from LaunchServices import kLSSharedFileListItemBeforeFirst, LSSharedFileListCreate, LSSharedFileListCopySnapshot, LSSharedFileListItemCopyDisplayName, LSSharedFileListItemResolve, LSSharedFileListItemMove, LSSharedFileListItemRemove, LSSharedFileListRemoveAllItems, LSSharedFileListInsertItemURL
 
-# Shoutout to Mike Lynn for the mount_share function below, allowing for the scripting of mounting network shares.
-# See his blog post for more details: http://michaellynn.github.io/2015/08/08/learn-you-a-better-pyobjc-bridgesupport-signature/
+
+# Shoutout to Mike Lynn for the mount_share function below, allowing for the
+# scripting of mounting network shares. See his blog post for more details:
+# http://michaellynn.github.io/2015/08/08/learn-you-a-better-pyobjc-bridgesupport-signature/
 class attrdict(dict): 
 	__getattr__ = dict.__getitem__
 	__setattr__ = dict.__setitem__
 
+
 NetFS = attrdict()
 # Can cheat and provide 'None' for the identifier, it'll just use frameworkPath instead
 # scan_classes=False means only add the contents of this Framework
-NetFS_bundle = initFrameworkWrapper('NetFS', frameworkIdentifier=None, frameworkPath=pathForFramework('NetFS.framework'), globals=NetFS, scan_classes=False)
+NetFS_bundle = initFrameworkWrapper(
+	'NetFS', frameworkIdentifier=None,
+	frameworkPath=pathForFramework('NetFS.framework'), globals=NetFS,
+	scan_classes=False
+)
+
 
 def mount_share(share_path):
 	# Mounts a share at /Volumes, returns the mount point or raises an error
 	sh_url = CFURLCreateWithString(None, share_path, None)
 	# Set UI to reduced interaction
-	open_options  = {NetFS.kNAUIOptionKey: NetFS.kNAUIOptionNoUI}
+	open_options = {NetFS.kNAUIOptionKey: NetFS.kNAUIOptionNoUI}
 	# Allow mounting sub-directories of root shares
 	mount_options = {NetFS.kNetFSAllowSubMountsKey: True}
 	# Mount!
-	result, output = NetFS.NetFSMountURLSync(sh_url, None, None, None, open_options, mount_options, None)
+	result, output = NetFS.NetFSMountURLSync(
+		sh_url, None, None, None, open_options, mount_options, None
+	)
 	# Check if it worked
 	if result != 0:
 		raise Exception('Error mounting url "%s": %s' % (share_path, output))
 	# Return the mount path
 	return str(output[0])
+
 
 # https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 # Fix NetFSMountURLSync signature
@@ -68,8 +79,10 @@ class FinderSidebar:
 	"""
 
 	def __init__(self):
-		self.sflRef    = LSSharedFileListCreate(kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None)
-		self.snapshot  = LSSharedFileListCopySnapshot(self.sflRef, None)
+		self.sflRef = LSSharedFileListCreate(
+			kCFAllocatorDefault, kLSSharedFileListFavoriteItems, None
+		)
+		self.snapshot = LSSharedFileListCopySnapshot(self.sflRef, None)
 		self.favorites = dict()
 		self.update()
 
@@ -79,7 +92,7 @@ class FinderSidebar:
 
 		"""
 		self.favorites = dict()
-		self.snapshot  = LSSharedFileListCopySnapshot(self.sflRef, None)
+		self.snapshot = LSSharedFileListCopySnapshot(self.sflRef, None)
 		for item in self.snapshot[0]:
 			name = LSSharedFileListItemCopyDisplayName(item)
 			path = ""
@@ -87,7 +100,8 @@ class FinderSidebar:
 				path = LSSharedFileListItemResolve(item,0,None,None)[1]
 			self.favorites[name] = path
 
-	def synchronize(self):
+	@staticmethod
+	def synchronize():
 		"""
 		Synchronizes CF prefs for sidebarlists identifier.
 
@@ -103,7 +117,8 @@ class FinderSidebar:
 			after (str): Name of sidebar list item to move "to_mv" after.
 
 		"""
-		if to_mv not in self.favorites.keys() or after not in self.favorites.keys() or to_mv == after:
+		if to_mv not in self.favorites.keys() or \
+			after not in self.favorites.keys() or to_mv == after:
 			return
 
 		for item in self.snapshot[0]:
@@ -147,17 +162,19 @@ class FinderSidebar:
 		Append item to sidebar list items.
 
 		Args:
-			to_add (str): Path to item to append to sidebar list.
+			:param to_add: Path to item to append to sidebar list.
 
 		Keyword Args:
-			uri (str): URI of server where item resides if not on localhost.
+			:param uri: URI of server where item resides if not on localhost.
 
 		"""
 		if uri.startswith("afp") or uri.startswith("smb"):
 			path = "%s%s" % (uri, to_add)
 			to_add = mount_share(path)
 		item = NSURL.alloc().initFileURLWithPath_(to_add)
-		LSSharedFileListInsertItemURL(self.sflRef, kLSSharedFileListItemBeforeFirst, None, None, item, None, None)
+		LSSharedFileListInsertItemURL(
+			self.sflRef, kLSSharedFileListItemBeforeFirst, None, None, item, None, None
+		)
 		self.synchronize()
 		self.update()
 
@@ -182,7 +199,7 @@ class FinderSidebar:
 		Gets name of sidebar list item identified by index.
 
 		Args:
-			index (str): Index to identfy sidebar list item by.
+			index (str): Index to identify sidebar list item by.
 
 		Returns:
 			Name of sidebar list item identified by index.
