@@ -11,15 +11,15 @@ from Foundation import NSBundle
 os_vers = int(mac_ver()[0].split('.')[1])
 if os_vers > 10:
 	SFL_bundle = NSBundle.bundleWithIdentifier_('com.apple.coreservices.SharedFileList')
-	functions  = [('LSSharedFileListCreate',              '^{OpaqueLSSharedFileListRef=}^{__CFAllocator=}^{__CFString=}@'),
-				('LSSharedFileListCopySnapshot',        '^{__CFArray=}^{OpaqueLSSharedFileListRef=}o^I'),
-				('LSSharedFileListItemCopyDisplayName', '^{__CFString=}^{OpaqueLSSharedFileListItemRef=}'),
-				('LSSharedFileListItemResolve',         'i^{OpaqueLSSharedFileListItemRef=}Io^^{__CFURL=}o^{FSRef=[80C]}'),
-				('LSSharedFileListItemMove',            'i^{OpaqueLSSharedFileListRef=}^{OpaqueLSSharedFileListItemRef=}^{OpaqueLSSharedFileListItemRef=}'),
-				('LSSharedFileListItemRemove',          'i^{OpaqueLSSharedFileListRef=}^{OpaqueLSSharedFileListItemRef=}'),
-				('LSSharedFileListRemoveAllItems',      'i^{OpaqueLSSharedFileListRef=}'),
-				('LSSharedFileListInsertItemURL',       '^{OpaqueLSSharedFileListItemRef=}^{OpaqueLSSharedFileListRef=}^{OpaqueLSSharedFileListItemRef=}^{__CFString=}^{OpaqueIconRef=}^{__CFURL=}^{__CFDictionary=}^{__CFArray=}'),
-				('kLSSharedFileListItemBeforeFirst',    '^{OpaqueLSSharedFileListItemRef=}'),]
+	functions = [('LSSharedFileListCreate',             b'^{OpaqueLSSharedFileListRef=}^{__CFAllocator=}^{__CFString=}@'),
+				('LSSharedFileListCopySnapshot',        b'^{__CFArray=}^{OpaqueLSSharedFileListRef=}o^I'),
+				('LSSharedFileListItemCopyDisplayName', b'^{__CFString=}^{OpaqueLSSharedFileListItemRef=}'),
+				('LSSharedFileListItemResolve',         b'i^{OpaqueLSSharedFileListItemRef=}Io^^{__CFURL=}o^{FSRef=[80C]}'),
+				('LSSharedFileListItemMove',            b'i^{OpaqueLSSharedFileListRef=}^{OpaqueLSSharedFileListItemRef=}^{OpaqueLSSharedFileListItemRef=}'),
+				('LSSharedFileListItemRemove',          b'i^{OpaqueLSSharedFileListRef=}^{OpaqueLSSharedFileListItemRef=}'),
+				('LSSharedFileListRemoveAllItems',      b'i^{OpaqueLSSharedFileListRef=}'),
+				('LSSharedFileListInsertItemURL',       b'^{OpaqueLSSharedFileListItemRef=}^{OpaqueLSSharedFileListRef=}^{OpaqueLSSharedFileListItemRef=}^{__CFString=}^{OpaqueIconRef=}^{__CFURL=}^{__CFDictionary=}^{__CFArray=}'),
+				('kLSSharedFileListItemBeforeFirst',    b'^{OpaqueLSSharedFileListItemRef=}'),]
 	loadBundleFunctions(SFL_bundle, globals(), functions)
 else:
 	from LaunchServices import kLSSharedFileListItemBeforeFirst, LSSharedFileListCreate, LSSharedFileListCopySnapshot, LSSharedFileListItemCopyDisplayName, LSSharedFileListItemResolve, LSSharedFileListItemMove, LSSharedFileListItemRemove, LSSharedFileListRemoveAllItems, LSSharedFileListInsertItemURL
@@ -46,16 +46,17 @@ def mount_share(share_path):
 	result, output = NetFS.NetFSMountURLSync(sh_url, None, None, None, open_options, mount_options, None)
 	# Check if it worked
 	if result != 0:
-		 raise Exception('Error mounting url "%s": %s' % (share_path, output))
-	# Return the mountpath
+		raise Exception('Error mounting url "%s": %s' % (share_path, output))
+	# Return the mount path
 	return str(output[0])
 
 # https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 # Fix NetFSMountURLSync signature
 del NetFS['NetFSMountURLSync']
-loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', 'i@@@@@@o^@')])
+loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', b'i@@@@@@o^@')])
 
-class FinderSidebar(object):
+
+class FinderSidebar:
 	"""
 	Finder Sidebar instance for modifying favorites entries for logged in user.
 
