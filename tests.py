@@ -12,7 +12,7 @@ class TestFinderSidebar(unittest.TestCase):
 
 	def tearDown(self):
 		self.finder.remove_all()
-		for uri in self.pre_items:
+		for uri in reversed(self.pre_items):
 			self.finder.add(uri)
 
 	def test_add(self):
