@@ -1,16 +1,20 @@
 #!/usr/bin/python
 
-from objc import loadBundleFunctions, initFrameworkWrapper, pathForFramework
 from platform import mac_ver
 
 from Cocoa import NSURL
-from CoreFoundation import CFPreferencesAppSynchronize, CFURLCreateWithString, kCFAllocatorDefault
-from LaunchServices import kLSSharedFileListFavoriteItems
+from CoreFoundation import CFPreferencesAppSynchronize
+from CoreFoundation import CFURLCreateWithString
+from CoreFoundation import kCFAllocatorDefault
 from Foundation import NSBundle
+from LaunchServices import kLSSharedFileListFavoriteItems
+from objc import loadBundleFunctions, initFrameworkWrapper, pathForFramework
 
 os_version = int(mac_ver()[0].split('.')[1])
 if os_version > 10:
-    SFL_bundle = NSBundle.bundleWithIdentifier_('com.apple.coreservices.SharedFileList')
+    SFL_bundle = NSBundle.bundleWithIdentifier_(
+        'com.apple.coreservices.SharedFileList'
+    )
     functions = [
         ('LSSharedFileListCreate',              b'^{OpaqueLSSharedFileListRef=}^{__CFAllocator=}^{__CFString=}@'),
         ('LSSharedFileListCopySnapshot',        b'^{__CFArray=}^{OpaqueLSSharedFileListRef=}o^I'),
@@ -25,20 +29,29 @@ if os_version > 10:
     loadBundleFunctions(SFL_bundle, globals(), functions)
     from LaunchServices import LSSharedFileListItemCopyResolvedURL
 else:
-    from LaunchServices import kLSSharedFileListItemBeforeFirst, LSSharedFileListCreate, LSSharedFileListCopySnapshot, LSSharedFileListItemCopyDisplayName, LSSharedFileListItemResolve, LSSharedFileListItemMove, LSSharedFileListItemRemove, LSSharedFileListRemoveAllItems, LSSharedFileListInsertItemURL
+    from LaunchServices import kLSSharedFileListItemBeforeFirst
+    from LaunchServices import LSSharedFileListCreate
+    from LaunchServices import LSSharedFileListCopySnapshot
+    from LaunchServices import LSSharedFileListItemCopyDisplayName
+    from LaunchServices import LSSharedFileListItemResolve
+    from LaunchServices import LSSharedFileListItemMove
+    from LaunchServices import LSSharedFileListItemRemove
+    from LaunchServices import LSSharedFileListRemoveAllItems
+    from LaunchServices import LSSharedFileListInsertItemURL
 
 
 # Shoutout to Mike Lynn for the mount_share function below, allowing for the
 # scripting of mounting network shares. See his blog post for more details:
 # http://michaellynn.github.io/2015/08/08/learn-you-a-better-pyobjc-bridgesupport-signature/
-class attrdict(dict): 
+class attrdict(dict):
     __getattr__ = dict.__getitem__
     __setattr__ = dict.__setitem__
 
 
 NetFS = attrdict()
-# Can cheat and provide 'None' for the identifier, it'll just use frameworkPath instead
-# scan_classes=False means only add the contents of this Framework
+# Can cheat and provide 'None' for the identifier, it'll just use
+# frameworkPath instead scan_classes=False means only add the
+# contents of this Framework
 NetFS_bundle = initFrameworkWrapper(
     'NetFS', frameworkIdentifier=None,
     frameworkPath=pathForFramework('NetFS.framework'), globals=NetFS,
@@ -67,7 +80,9 @@ def mount_share(share_path):
 # https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
 # Fix NetFSMountURLSync signature
 del NetFS['NetFSMountURLSync']
-loadBundleFunctions(NetFS_bundle, NetFS, [('NetFSMountURLSync', b'i@@@@@@o^@')])
+loadBundleFunctions(
+    NetFS_bundle, NetFS, [('NetFSMountURLSync', b'i@@@@@@o^@')]
+)
 
 
 class FinderSidebar:
@@ -113,7 +128,8 @@ class FinderSidebar:
 
     def move(self, to_mv, after):
         """
-        Moves sidebar list item to position immediately other sidebar list item.
+        Moves sidebar list item to position immediately other sidebar
+        list item.
 
         Args:
             to_mv (str): Name of sidebar list item to move.
@@ -121,7 +137,7 @@ class FinderSidebar:
 
         """
         if to_mv not in self.favorites.keys() or \
-            after not in self.favorites.keys() or to_mv == after:
+                after not in self.favorites.keys() or to_mv == after:
             return
 
         for item in self.snapshot[0]:
@@ -151,12 +167,28 @@ class FinderSidebar:
         self.synchronize()
         self.update()
 
-    def removeAll(self):
+    def remove_all(self):
         """
         Removes all sidebar list items.
 
         """
         LSSharedFileListRemoveAllItems(self.sflRef)
+        self.synchronize()
+        self.update()
+
+    def remove_by_path(self, path):
+        """
+        Removes sidebar list item.
+
+        Args:
+            path (str): Path of sidebar list item to remove.
+
+        """
+        comparison_path = f'file://{path}/'.upper()
+        for item in self.snapshot[0]:
+            sidebar_item = LSSharedFileListItemCopyResolvedURL(item, 0, None)
+            if comparison_path == str(sidebar_item[0]).upper():
+                LSSharedFileListItemRemove(self.sflRef, item)
         self.synchronize()
         self.update()
 
@@ -176,12 +208,13 @@ class FinderSidebar:
             to_add = mount_share(path)
         item = NSURL.alloc().initFileURLWithPath_(to_add)
         LSSharedFileListInsertItemURL(
-            self.sflRef, kLSSharedFileListItemBeforeFirst, None, None, item, None, None
+            self.sflRef, kLSSharedFileListItemBeforeFirst,
+            None, None, item, None, None
         )
         self.synchronize()
         self.update()
 
-    def getIndexFromName(self, name):
+    def get_index_from_name(self, name):
         """
         Gets index of sidebar list item identified by name.
 
@@ -197,7 +230,7 @@ class FinderSidebar:
             if name == found_name:
                 return index
 
-    def getNameFromIndex(self, index):
+    def get_name_from_index(self, index):
         """
         Gets name of sidebar list item identified by index.
 
@@ -211,12 +244,3 @@ class FinderSidebar:
         if index > len(self.snapshot[0]):
             index = -1
         return LSSharedFileListItemCopyDisplayName(self.snapshot[0][index])
-
-    def removeByPath(self, path):
-        comparison_path = f'file://{path}/'.upper()
-        for item in self.snapshot[0]:
-            sidebar_item = LSSharedFileListItemCopyResolvedURL(item, 0, None)
-            if comparison_path == str(sidebar_item[0]).upper():
-                LSSharedFileListItemRemove(self.sflRef, item)
-        self.synchronize()
-        self.update()
