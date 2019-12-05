@@ -1,6 +1,7 @@
 from FinderSidebarEditor import FinderSidebar
 import unittest
 
+
 class TestFinderSidebar(unittest.TestCase):
 	def setUp(self):
 		self.finder = FinderSidebar()
