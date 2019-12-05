@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from platform import mac_ver
 
 from Cocoa import NSURL
@@ -90,10 +88,12 @@ class FinderSidebar:
     Finder Sidebar instance for modifying favorites entries for logged in user.
 
     Attributes:
-        sflRef    (LSSharedFileList): Reference to sfl object containing Finder favorites data.
-        snapshot             (tuple): Snapshot of Finder sfl object containing readable entries for each favorite.
-        favorites             (dict): Dictionary containing name: uri pairs for each favorite.
-
+        sflRef (LSSharedFileList): Reference to sfl object containing Finder
+                                   favorites data.
+        snapshot (tuple): Snapshot of Finder sfl object containing readable
+                          entries for each favorite.
+        favorites (dict): Dictionary containing name: uri pairs for
+                          each favorite.
     """
 
     def __init__(self):
