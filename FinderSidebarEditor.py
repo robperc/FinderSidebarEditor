@@ -7,6 +7,7 @@ from CoreFoundation import kCFAllocatorDefault
 from Foundation import NSBundle
 from LaunchServices import kLSSharedFileListFavoriteItems
 from objc import loadBundleFunctions, initFrameworkWrapper, pathForFramework
+from CoreServices import LSSharedFileListCreate, kLSSharedFileListFavoriteItems, LSSharedFileListInsertItemURL
 
 os_version = int(mac_ver()[0].split('.')[1])
 if os_version > 10:
@@ -186,11 +187,12 @@ class FinderSidebar:
         """
         comparison_path = f'file://{path}/'.upper()
         for item in self.snapshot[0]:
-            sidebar_item = LSSharedFileListItemCopyResolvedURL(item, 0, None)
-            if comparison_path == str(sidebar_item[0]).upper():
+            sidebar_item = LSSharedFileListItemResolve(item, 0, None, None)
+            if comparison_path == str(sidebar_item[1]).upper():
                 LSSharedFileListItemRemove(self.sflRef, item)
         self.synchronize()
         self.update()
+        
 
     def add(self, to_add, uri="file://localhost"):
         """
