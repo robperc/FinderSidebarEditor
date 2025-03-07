@@ -5,6 +5,7 @@ from CoreFoundation import CFPreferencesAppSynchronize
 from CoreFoundation import CFURLCreateWithString
 from CoreFoundation import kCFAllocatorDefault
 from Foundation import NSBundle
+from Foundation import NSDictionary
 from LaunchServices import kLSSharedFileListFavoriteItems
 from objc import loadBundleFunctions, initFrameworkWrapper, pathForFramework
 from CoreServices import LSSharedFileListCreate, kLSSharedFileListFavoriteItems, LSSharedFileListInsertItemURL
@@ -194,7 +195,7 @@ class FinderSidebar:
         self.update()
         
 
-    def add(self, to_add, uri="file://localhost"):
+    def add(self, to_add, uri="file://localhost", icon_path=None):
         """
         Append item to sidebar list items.
 
@@ -203,15 +204,22 @@ class FinderSidebar:
 
         Keyword Args:
             :param uri: URI of server where item resides if not on localhost.
+            :param icon_path: Path to .icns file to be used as an icon.
 
         """
         if uri.startswith("afp") or uri.startswith("smb"):
             path = "%s%s" % (uri, to_add)
             to_add = mount_share(path)
         item = NSURL.alloc().initFileURLWithPath_(to_add)
+        
+        icon = None
+        if icon_path:
+            icon_url = NSURL.fileURLWithPath_(icon_path)
+            icon = NSDictionary.dictionaryWithObject_forKey_(icon_url, "icon")
+
         LSSharedFileListInsertItemURL(
             self.sflRef, kLSSharedFileListItemBeforeFirst,
-            None, None, item, None, None
+            None, None, item, icon, None
         )
         self.synchronize()
         self.update()
