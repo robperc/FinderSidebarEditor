@@ -6,8 +6,7 @@ class TestFinderSidebar(unittest.TestCase):
 	def setUp(self):
 		self.finder = FinderSidebar()
 		self.pre_items = [
-			str(uri).split("file://")[1]
-			for uri in self.finder.favorites.values()
+			str(uri).split("file://")[1] for uri in self.finder.favorites.values() if uri
 		]
 		self.finder.remove_all()
 
